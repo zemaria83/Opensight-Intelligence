@@ -26,16 +26,6 @@ para demonstrar a viabilidade de automação de tarefas OSINT.
 - `examples/` — outputs de exemplo (sem dados sensíveis)
 
 ---
-
-## Requisitos
-- Python 3.10 ou superior
-- Dependências descritas no ficheiro `requirements.txt`
-
-Instalação das dependências:
-```bash
-python -m pip install -r requirements.txt
-
-
 ## Prova de Conceito (PoC)
 
 O repositório inclui um script em Python para enumeração de subdomínios, utilizando exclusivamente
@@ -63,3 +53,14 @@ O projeto encontra-se em fase de prototipagem académica e não representa um pr
 Projeto em fase de conceção, prototipagem e validação académica, desenvolvido no âmbito de uma unidade
 curricular de cibersegurança.
 
+
+
+---
+
+## Requisitos
+- Python 3.10 ou superior
+- Dependências descritas no ficheiro `requirements.txt`
+
+Instalação das dependências:
+```bash
+python -m pip install -r requirements.txt
