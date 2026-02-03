@@ -35,7 +35,7 @@ um sistema completo nem uma ferramenta de exploração.
 Execução (exemplo):
 
 ```bash
-python scripts/subdomain_enum.py --input subdomains.txt --domain exemplo.com´´
+python scripts/subdomain_enum.py --input subdomains.txt --domain exemplo.com´´´
 
 
 ## Ética e Limitações
