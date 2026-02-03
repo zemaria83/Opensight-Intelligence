@@ -5,7 +5,7 @@ desenvolvida com foco na recolha, análise e reporting de informação provenien
 de forma ética e em conformidade com o Regulamento Geral sobre a Proteção de Dados (RGPD).
 
 O projeto inclui um protótipo funcional desenvolvido em Uizard e uma prova de conceito (PoC) técnica
-para automatização de tarefas OSINT.
+para demonstrar a viabilidade de automação de tarefas OSINT.
 
 ---
 
@@ -13,7 +13,7 @@ para automatização de tarefas OSINT.
 - Diagnóstico de exposição digital
 - Produção de relatórios OSINT e recomendações
 - Prototipagem de dashboards e fluxos de utilização
-- Prova de conceito de automação: enumeração de subdomínios via DNS
+- Prova de conceito (PoC) de automação: enumeração de subdomínios via DNS
 
 ---
 
@@ -28,9 +28,10 @@ para automatização de tarefas OSINT.
 ---
 
 ## Requisitos
-- Python 3.10+
-- Dependências listadas em `requirements.txt`
+- Python 3.10 ou superior
+- Dependências descritas no ficheiro `requirements.txt`
 
 Instalação das dependências:
 ```bash
 python -m pip install -r requirements.txt
+
