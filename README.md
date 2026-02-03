@@ -34,18 +34,16 @@ um sistema completo nem uma ferramenta de exploração.
 
 Execução (exemplo):
 
+```bash
 python scripts/subdomain_enum.py --input subdomains.txt --domain exemplo.com
+
 
 ## Ética e Limitações
 
 Apenas são utilizadas fontes de informação públicas (OSINT).
-
 A execução de scripts deve ser realizada apenas em domínios próprios ou com autorização explícita.
-
 Não são realizadas atividades de intrusão, exploração ativa ou recolha de informação privada.
-
 Dados de exemplo presentes no repositório são fictícios ou anonimizados.
-
 O projeto encontra-se em fase de prototipagem académica e não representa um produto final em produção.
 
 **## Estado do Projeto**
