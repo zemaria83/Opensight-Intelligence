@@ -19,10 +19,15 @@ de enumeração de subdomínios incluída neste projeto.
 ## OUTPUT ILUSTRATIVO
 
  Example output — Subdomain Enumeration (PoC)
+ 
  Domain: exemplo.com
+ 
  Date: 2026-02-04
+ 
  Source: DNS (A / AAAA / CNAME)
 
 www.exemplo.com
+
 mail.exemplo.com
+
 api.exemplo.com
