@@ -8,6 +8,7 @@ de enumeração de subdomínios incluída neste projeto.
   Lista de subdomínios (prefixos) utilizada como entrada para o script.
 
 - `subdomains_output_example.txt`  
+- `subdomains_active.txt`  
   Resultado da execução do script, contendo apenas os subdomínios que apresentaram
   resolução DNS válida.
 
@@ -18,11 +19,16 @@ de enumeração de subdomínios incluída neste projeto.
 
 ## OUTPUT ILUSTRATIVO
 
-# Example output — Subdomain Enumeration (PoC)
-# Domain: exemplo.com
-# Date: 2026-02-04
-# Source: DNS (A / AAAA / CNAME)
+ Example output — Subdomain Enumeration (PoC)
+ 
+ Domain: exemplo.com
+ 
+ Date: 2026-02-04
+ 
+ Source: DNS (A / AAAA / CNAME)
 
 www.exemplo.com
+
 mail.exemplo.com
+
 api.exemplo.com
