@@ -4,10 +4,9 @@ Esta pasta contém ficheiros de exemplo que demonstram a utilização da prova d
 de enumeração de subdomínios incluída neste projeto.
 
 ## Conteúdo
-- `subdomains_input_example.txt`  
+- `subdomains.txt`  
   Lista de subdomínios (prefixos) utilizada como entrada para o script.
-
-- `subdomains_output_example.txt`  
+ 
 - `subdomains_active.txt`  
   Resultado da execução do script, contendo apenas os subdomínios que apresentaram
   resolução DNS válida.
