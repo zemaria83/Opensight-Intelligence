@@ -1,3 +1,5 @@
+
+=======
 # Script — Enumeração de Subdomínios (PoC OSINT)
 
 Este script em Python constitui uma **prova de conceito (PoC)** desenvolvida no âmbito do projeto
@@ -32,17 +34,19 @@ Os subdomínios válidos são guardados num ficheiro de saída para posterior an
 
 Instalação das dependências:
 ```bash
-python -m pip install -r ../requirements.txt```
+python -m pip install -r ../requirements.txt`
+```
 
 
-##Utilização
+
+## Utilização
 
 Exemplo de execução a partir da raiz do projeto:
 
 python scripts/subdomain_enum.py --input examples/subdomains.txt --domain exemplo.com
 
 
-##Parâmetros principais:
+## Parâmetros principais:
 
 --input : ficheiro de entrada com subdomínios (um por linha)
 
@@ -54,7 +58,7 @@ python scripts/subdomain_enum.py --input examples/subdomains.txt --domain exempl
 
 --delay : (opcional) atraso entre consultas DNS
 
-##Output
+## Output
 
 O script gera um ficheiro de texto contendo apenas os subdomínios que apresentaram
 resolução DNS válida.
@@ -65,7 +69,7 @@ www.exemplo.com
 mail.exemplo.com
 api.exemplo.com
 
-##Ética e Limitações
+## Ética e Limitações
 
 O script utiliza exclusivamente fontes públicas (consultas DNS).
 
@@ -75,8 +79,9 @@ Não realiza recolha de informação privada, exploração ativa ou testes intru
 
 Tem carácter académico e demonstrativo, não constituindo uma ferramenta de produção.
 
-##Nota Final
+## Nota Final
 
 Este script foi desenvolvido como apoio ao projeto académico e serve apenas para ilustrar
 conceitos de automação em OSINT, não substituindo ferramentas profissionais nem processos
 completos de análise de segurança.
+>>>>>>> ab0db33975605a3d82caff1d7c5bf011a151da49
