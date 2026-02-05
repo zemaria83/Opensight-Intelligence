@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 =======
 # Script — Enumeração de Subdomínios (PoC OSINT)
@@ -85,3 +86,6 @@ Este script foi desenvolvido como apoio ao projeto académico e serve apenas par
 conceitos de automação em OSINT, não substituindo ferramentas profissionais nem processos
 completos de análise de segurança.
 >>>>>>> ab0db33975605a3d82caff1d7c5bf011a151da49
+=======
+
+>>>>>>> c710271990f50cf4eb5886c4fec301e76d6d2cd3
