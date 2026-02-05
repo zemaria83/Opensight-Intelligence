@@ -18,12 +18,46 @@ sem recorrer a técnicas de intrusão ou exploração ativa.
 ---
 
 ## Funcionamento
-O script recebe como entrada:
-- um ficheiro de texto contendo possíveis subdomínios (prefixos),
-- um domínio base autorizado.
 
-Para cada subdomínio, é realizada uma consulta DNS (A, AAAA ou CNAME).
-Os subdomínios válidos são guardados num ficheiro de saída para posterior análise.
+O script funciona com base em ficheiros de texto simples (`.txt`), garantindo simplicidade,
+reprodutibilidade e facilidade de análise dos resultados.
+
+### Ficheiro de Entrada
+O utilizador deve fornecer um ficheiro `.txt` contendo uma lista de possíveis subdomínios
+(prefixos), com um subdomínio por linha.
+
+Exemplo de ficheiro de entrada:
+```txt
+www
+mail
+api
+dev
+test
+```
+## Execução
+
+Durante a execução, o script:
+
+ - Lê o ficheiro de entrada com os subdomínios;
+
+ - Combina cada subdomínio com o domínio base fornecido;
+
+ - Realiza consultas DNS (A, AAAA ou CNAME) para verificar a existência do subdomínio;
+
+ - Identifica os subdomínios com resolução DNS válida.
+
+ - Ficheiro de Saída
+
+Os subdomínios considerados válidos são guardados num ficheiro de texto .txt,
+permitindo a sua posterior análise ou reutilização.
+
+Exemplo de ficheiro de saída:
+
+`www.exemplo.com`
+`mail.exemplo.com`
+`api.exemplo.com`
+
+O nome do ficheiro de saída pode ser definido pelo utilizador através do parâmetro `--output`.
 
 ---
 
