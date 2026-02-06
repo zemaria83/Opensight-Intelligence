@@ -170,14 +170,19 @@ Ficheiros de Entrada e Saída
 
 ## Entrada (exemplo):
 `www
+
 https://mail.exemplo.com/login
+
 www.outrodominio.com
+
 api:443`
 
 ## Saída (clean) — `examples/subdomains_clean.txt`:
 
 `www
+
 mail
+
 api`
 
 ## Saída (ignored) — examples/ignored_entries.txt:
