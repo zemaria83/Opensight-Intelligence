@@ -74,16 +74,16 @@ python -m pip install -r ../requirements.txt`
 
 Exemplo de execução a partir da raiz do projeto:
 
-`python scripts/subdomain_enum.py --input examples/subdomains.txt --domain exemplo.com`
+` python scripts\subdomain_enum.py -i examples\subdomains_clean.txt -d google.com -o examples\subdomains_active.txt`
 
 
 ## Parâmetros principais:
 
---`input` : ficheiro de entrada com subdomínios (um por linha)
+--`input` ou `-i` : ficheiro de entrada com subdomínios (um por linha)
 
---`domain` : domínio base a analisar
+--`domain` ou `-d` : domínio base a analisar
 
---`output` : (opcional) ficheiro de saída
+--`output` ou `-o` : (opcional) ficheiro de saída
 
 --`timeout` : (opcional) timeout das consultas DNS
 
