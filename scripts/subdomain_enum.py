@@ -3,6 +3,7 @@ import time
 import dns.resolver
 import dns.exception
 
+
 def load_subdomains(file_path: str) -> list[str]:
     """Carrega subdomínios de um ficheiro de texto (um por linha)."""
     try:
@@ -12,6 +13,7 @@ def load_subdomains(file_path: str) -> list[str]:
                 s = line.strip().strip(".")
                 if s and not s.startswith("#"):
                     subs.append(s)
+
         # remover duplicados mantendo ordem
         seen = set()
         cleaned = []
@@ -20,44 +22,93 @@ def load_subdomains(file_path: str) -> list[str]:
                 seen.add(s)
                 cleaned.append(s)
         return cleaned
+
     except FileNotFoundError:
         print(f"[ERRO] Ficheiro não encontrado: {file_path}")
         return []
 
+
 def build_fqdn(sub: str, base_domain: str) -> str:
     sub = sub.strip().strip(".")
     base_domain = base_domain.strip().strip(".")
-    # Se já for FQDN (contém o domínio base no fim), não duplica
     if sub.endswith(base_domain):
         return sub
     return f"{sub}.{base_domain}"
 
-def make_resolver(timeout: float) -> dns.resolver.Resolver:
+
+def make_resolver(timeout: float, nameservers: list[str] | None = None) -> dns.resolver.Resolver:
     r = dns.resolver.Resolver()
     r.timeout = timeout
     r.lifetime = timeout
+
+    # Fallback seguro para OSINT
+    if nameservers:
+        r.nameservers = nameservers
+    else:
+        r.nameservers = ["1.1.1.1", "8.8.8.8"]
+
     return r
 
-def check_subdomain_exists(resolver: dns.resolver.Resolver, fqdn: str) -> tuple[bool, str]:
+
+def check_subdomain_exists(
+    resolver: dns.resolver.Resolver,
+    fqdn: str,
+    retries: int = 1,
+    record_types: tuple[str, ...] = ("A", "AAAA", "CNAME"),
+) -> tuple[str, str]:
     """
-    Verifica existência via DNS, tentando A, AAAA e CNAME.
-    Retorna (existe, tipo_registo_que_validou).
+    Verifica existência via DNS tentando record_types.
+    Retorna (estado, rtype):
+      - ("EXISTE", "A"/"AAAA"/"CNAME")
+      - ("NAO_EXISTE", "")
+      - ("INDEFINIDO", "")  # por erros/timeouts persistentes
     """
-    for rtype in ("A", "AAAA", "CNAME"):
-        try:
-            resolver.resolve(fqdn, rtype)
-            return True, rtype
-        except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer, dns.resolver.Timeout):
-            continue
-        except (dns.resolver.NoNameservers, dns.exception.DNSException):
-            # erro DNS genérico: consideramos "não validado" e seguimos
-            continue
-    return False, ""
+    # Primeiro, tentamos distinguir NXDOMAIN (não existe) de erros transitórios.
+    transient_errors = 0
+
+    for rtype in record_types:
+        attempts = 0
+        while attempts < max(1, retries):
+            attempts += 1
+            try:
+                resolver.resolve(fqdn, rtype)
+                return "EXISTE", rtype
+
+            except dns.resolver.NXDOMAIN:
+                # NXDOMAIN é forte sinal de inexistência (para esse nome)
+                return "NAO_EXISTE", ""
+
+            except dns.resolver.NoAnswer:
+                # Nome existe (potencialmente), mas sem esse tipo de registo
+                break
+
+            except (dns.resolver.Timeout, dns.resolver.NoNameservers, dns.exception.DNSException):
+                transient_errors += 1
+                # retry se houver
+                continue
+
+    if transient_errors > 0:
+        return "INDEFINIDO", ""
+    return "NAO_EXISTE", ""
+
 
 def save_active_subdomains(file_path: str, subdomains: list[str]) -> None:
     with open(file_path, "w", encoding="utf-8") as f:
         for s in subdomains:
             f.write(s + "\n")
+
+
+def parse_nameservers(ns_args: list[str] | None) -> list[str] | None:
+    if not ns_args:
+        return None
+    # aceita: --ns 1.1.1.1 --ns 8.8.8.8
+    # ou:    --ns 1.1.1.1,8.8.8.8
+    out: list[str] = []
+    for item in ns_args:
+        parts = [p.strip() for p in item.split(",") if p.strip()]
+        out.extend(parts)
+    return out or None
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -68,6 +119,12 @@ def main():
     parser.add_argument("--output", "-o", default="subdomains_active.txt", help="Ficheiro de saída.")
     parser.add_argument("--timeout", type=float, default=2.0, help="Timeout DNS em segundos.")
     parser.add_argument("--delay", type=float, default=0.1, help="Atraso entre queries (segundos).")
+    parser.add_argument("--retries", type=int, default=2, help="Número de tentativas por tipo de registo.")
+    parser.add_argument(
+        "--ns",
+        action="append",
+        help="Nameserver(s) a usar. Ex: --ns 1.1.1.1 --ns 8.8.8.8 ou --ns 1.1.1.1,8.8.8.8",
+    )
     args = parser.parse_args()
 
     subs = load_subdomains(args.input)
@@ -75,22 +132,35 @@ def main():
         print("[INFO] Nenhum subdomínio carregado.")
         return
 
-    resolver = make_resolver(args.timeout)
-    active = []
+    nameservers = parse_nameservers(args.ns)
+    resolver = make_resolver(args.timeout, nameservers=nameservers)
+
+    active: list[str] = []
+    unknown: list[str] = []
 
     print("[INFO] A verificar subdomínios…")
     for sub in subs:
         fqdn = build_fqdn(sub, args.domain)
-        exists, rtype = check_subdomain_exists(resolver, fqdn)
-        if exists:
+        estado, rtype = check_subdomain_exists(resolver, fqdn, retries=args.retries)
+
+        if estado == "EXISTE":
             print(f"[VÁLIDO:{rtype}] {fqdn}")
             active.append(fqdn)
+        elif estado == "INDEFINIDO":
+            print(f"[INDEFINIDO] {fqdn} (timeout/erro DNS)")
+            unknown.append(fqdn)
         else:
             print(f"[INVÁLIDO] {fqdn}")
+
         time.sleep(max(0.0, args.delay))
 
     save_active_subdomains(args.output, active)
     print(f"[OK] Subdomínios ativos guardados em: {args.output}")
 
+    if unknown:
+        print(f"[AVISO] {len(unknown)} subdomínios ficaram INDEFINIDOS (podes aumentar timeout/retries ou mudar NS).")
+
+
 if __name__ == "__main__":
     main()
+
