@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpenSight Intelligence — OSINT</title>
+  <style>
+    :root{
+      --bg:#070A12;
+      --bg2:#0B1220;
+      --card:#0B1220;
+      --text:#E5E7EB;
+      --muted:#9CA3AF;
+      --border:#1F2937;
+      --primary:#60A5FA;
+      --primary2:#3B82F6;
+      --ok:#22C55E;
+      --warn:#F59E0B;
+      --bad:#EF4444;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius:18px;
+      --max:1100px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(900px 500px at 15% 10%, rgba(96,165,250,.18), transparent 60%),
+        radial-gradient(700px 420px at 80% 25%, rgba(34,197,94,.10), transparent 55%),
+        radial-gradient(650px 380px at 55% 85%, rgba(245,158,11,.10), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+
+    /* Top bar */
+    header{
+      position:sticky; top:0;
+      backdrop-filter: blur(10px);
+      background: rgba(7,10,18,.65);
+      border-bottom:1px solid rgba(31,41,55,.8);
+      z-index:10;
+    }
+    .nav{
+      height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:800; letter-spacing:.2px;
+    }
+    .logoMark{
+      width:12px;height:12px;border-radius:999px;
+      background: conic-gradient(from 180deg, var(--primary), #22c55e, #a78bfa, var(--primary));
+      box-shadow: 0 0 0 4px rgba(96,165,250,.10);
+    }
+    .menu{display:flex;gap:18px;color:var(--muted);font-size:14px}
+    .menu a:hover{color:var(--text)}
+    .actions{display:flex;gap:10px;align-items:center}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid rgba(31,41,55,.9);
+      background: rgba(11,18,32,.75);
+      color:var(--text);
+      font-weight:700;
+      font-size:14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .btn.primary{
+      background: linear-gradient(180deg, rgba(59,130,246,1), rgba(37,99,235,1));
+      border-color: rgba(96,165,250,.55);
+    }
+    .btn.primary:hover{filter:brightness(1.08)}
+    .btn.ghost{background:transparent}
+
+    /* Hero */
+    .hero{
+      padding:56px 0 24px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:26px;
+      align-items:start;
+    }
+    .badge{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:7px 12px;border-radius:999px;
+      border:1px solid rgba(31,41,55,.9);
+      background: rgba(11,18,32,.65);
+      color:var(--muted);
+      font-size:12px;
+    }
+    .pulse{
+      width:8px;height:8px;border-radius:999px;background:var(--ok);
+      box-shadow:0 0 0 0 rgba(34,197,94,.45);
+      animation:pulse 1.8s infinite;
+    }
+    @keyframes pulse{
+      0%{box-shadow:0 0 0 0 rgba(34,197,94,.38)}
+      70%{box-shadow:0 0 0 10px rgba(34,197,94,0)}
+      100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+    }
+    h1{
+      margin:14px 0 10px;
+      font-size:46px;
+      line-height:1.05;
+      letter-spacing:-.6px;
+    }
+    .lead{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      max-width:60ch;
+    }
+    .cta{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+    .meta{
+      margin-top:18px;
+      display:grid;
+      gap:10px;
+      padding:0;
+      list-style:none;
+    }
+    .meta li{
+      display:flex;gap:10px;align-items:flex-start;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .chip{
+      width:20px;height:20px;border-radius:8px;
+      border:1px solid rgba(31,41,55,.9);
+      background: rgba(11,18,32,.65);
+      display:flex;align-items:center;justify-content:center;
+      color:var(--primary);
+      font-weight:900;
+      flex:0 0 auto;
+    }
+
+    /* Panel mock dashboard */
+    .panel{
+      border-radius: var(--radius);
+      border: 1px solid rgba(31,41,55,.95);
+      background: linear-gradient(180deg, rgba(11,18,32,.85), rgba(11,18,32,.70));
+      box-shadow: var(--shadow);
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .panel::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(420px 180px at 30% 10%, rgba(96,165,250,.22), transparent 65%),
+                  radial-gradient(360px 160px at 75% 30%, rgba(34,197,94,.14), transparent 60%);
+      pointer-events:none;
+      filter: blur(0px);
+      opacity:.9;
+    }
+    .panel > *{position:relative}
+    .panelHead{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;
+      margin-bottom:12px;
+    }
+    .panelHead h3{
+      margin:0;
+      font-size:13px;
+      color:var(--muted);
+      font-weight:800;
+      letter-spacing:.2px;
+      text-transform:uppercase;
+    }
+    .tag{
+      font-size:12px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(96,165,250,.35);
+      background: rgba(96,165,250,.10);
+      color: var(--primary);
+      font-weight:800;
+    }
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .kpi{
+      border:1px solid rgba(31,41,55,.95);
+      background: rgba(7,10,18,.45);
+      border-radius: 14px;
+      padding:12px;
+    }
+    .k{font-size:12px;color:var(--muted)}
+    .v{font-size:18px;font-weight:900;margin-top:4px}
+    .list{
+      border:1px solid rgba(31,41,55,.95);
+      background: rgba(7,10,18,.35);
+      border-radius: 14px;
+      padding:12px;
+    }
+    .row{
+      display:flex;justify-content:space-between;gap:12px;
+      padding:10px 0;border-top:1px solid rgba(31,41,55,.95);
+      color:var(--muted);
+      font-size:14px;
+    }
+    .row:first-child{border-top:none;padding-top:0}
+    .sev{
+      font-weight:900;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(31,41,55,.95);
+      background: rgba(11,18,32,.65);
+      color:var(--text);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.3px;
+    }
+    .sev.low{border-color:rgba(34,197,94,.35);color:#86EFAC}
+    .sev.med{border-color:rgba(245,158,11,.35);color:#FCD34D}
+    .sev.high{border-color:rgba(239,68,68,.35);color:#FCA5A5}
+
+    /* Sections */
+    .section{padding:26px 0}
+    h2{margin:0 0 12px;font-size:22px}
+    .sub{margin:0 0 16px;color:var(--muted);max-width:72ch}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid rgba(31,41,55,.95);
+      background: rgba(11,18,32,.70);
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+      padding:16px;
+    }
+    .card h4{margin:0 0 6px}
+    .card p{margin:0;color:var(--muted);font-size:14px}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .step{
+      border-radius: var(--radius);
+      border: 1px solid rgba(31,41,55,.95);
+      background: rgba(11,18,32,.60);
+      padding:16px;
+    }
+    .num{
+      width:30px;height:30px;border-radius:12px;
+      display:flex;align-items:center;justify-content:center;
+      border:1px solid rgba(96,165,250,.35);
+      background: rgba(96,165,250,.10);
+      color:var(--primary);
+      font-weight:900;
+      margin-bottom:10px;
+    }
+    .contact{
+      display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+      align-items:center;
+    }
+    .note{
+      border-radius: var(--radius);
+      border: 1px solid rgba(31,41,55,.95);
+      background: rgba(11,18,32,.55);
+      padding:16px;
+      color:var(--muted);
+      font-size:14px;
+      flex: 1 1 520px;
+    }
+
+    footer{
+      border-top:1px solid rgba(31,41,55,.95);
+      margin-top:18px;
+      padding:18px 0 26px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .foot{
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap
+    }
+
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      h1{font-size:36px}
+      .menu{display:none}
+      .cards{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr}
+      .kpis{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap nav">
+      <div class="brand"><span class="logoMark"></span> OpenSight Intelligence</div>
+      <nav class="menu">
+        <a href="#servicos">Serviços</a>
+        <a href="#como">Como funciona</a>
+        <a href="#conformidade">Conformidade</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <div class="actions">
+        <a class="btn ghost" href="#contacto">Login</a>
+        <a class="btn primary" href="#contacto">Pedir Diagnóstico</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="grid">
+        <div>
+          <div class="badge"><span class="pulse"></span> OSINT Ético • RGPD • Evidência rastreável</div>
+          <h1>Inteligência OSINT para reduzir a exposição digital.</h1>
+          <p class="lead">
+            Plataforma conceptual e protótipo para diagnóstico de exposição em fontes abertas,
+            com resultados estruturados, limitações explícitas e recomendações acionáveis.
+          </p>
+
+          <div class="cta">
+            <a class="btn primary" href="#contacto">Pedir Diagnóstico</a>
+            <a class="btn" href="#servicos">Ver Serviços</a>
+          </div>
+
+          <ul class="meta">
+            <li><span class="chip">✓</span> Fontes abertas e verificáveis, com foco em responsabilidade.</li>
+            <li><span class="chip">✓</span> Classificação por severidade, impacto e nível de confiança.</li>
+            <li><span class="chip">✓</span> Relatório técnico e executivo, pronto para ação.</li>
+          </ul>
+        </div>
+
+        <aside class="panel" aria-label="Mock dashboard">
+          <div class="panelHead">
+            <h3>SOC Snapshot (exemplo)</h3>
+            <span class="tag">DEMO</span>
+          </div>
+
+          <div class="kpis">
+            <div class="kpi"><div class="k">Severidade</div><div class="v">Média</div></div>
+            <div class="kpi"><div class="k">Exposições</div><div class="v">12</div></div>
+            <div class="kpi"><div class="k">Confiança</div><div class="v">0,78</div></div>
+          </div>
+
+          <div class="list">
+            <div class="row" style="padding-top:0">
+              <strong style="color:var(--text)">Achados recentes</strong>
+              <span class="sev med">MED</span>
+            </div>
+            <div class="row"><span>Subdomínio exposto</span><span class="sev low">LOW</span></div>
+            <div class="row"><span>Metadados públicos</span><span class="sev med">MED</span></div>
+            <div class="row"><span>Credenciais em fuga (repo)</span><span class="sev high">HIGH</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="servicos">
+      <h2>Serviços</h2>
+      <p class="sub">Oferta conceptual orientada a diagnóstico, evidência e mitigação, adequada a organizações com necessidade de visibilidade sobre exposição pública.</p>
+      <div class="cards">
+        <div class="card">
+          <h4>Diagnóstico de Exposição Digital</h4>
+          <p>Inventário conceptual, superfície de ataque e sinais públicos de risco técnico/reputacional.</p>
+        </div>
+        <div class="card">
+          <h4>Análise e Correlação</h4>
+          <p>Organização por severidade, confiança e impacto para suportar decisões e priorização.</p>
+        </div>
+        <div class="card">
+          <h4>Relatórios e Recomendações</h4>
+          <p>Relatórios técnicos e executivos com evidência, ações priorizadas e limitações explícitas.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="como">
+      <h2>Como funciona</h2>
+      <p class="sub">Fluxo de trabalho inspirado em boas práticas e adaptado ao contexto académico: pedido, recolha, avaliação e entrega.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <strong>Pedido e contexto</strong>
+          <p style="margin:6px 0 0;color:var(--muted);font-size:14px;">Definição do alvo e objetivo, validação de legitimidade.</p>
+        </div>
+        <div class="step">
+          <div class="num">2</div>
+          <strong>Recolha OSINT</strong>
+          <p style="margin:6px 0 0;color:var(--muted);font-size:14px;">Fontes públicas com evidência e rastreabilidade.</p>
+        </div>
+        <div class="step">
+          <div class="num">3</div>
+          <strong>Correlação e avaliação</strong>
+          <p style="margin:6px 0 0;color:var(--muted);font-size:14px;">Classificação por severidade, confiança e impacto.</p>
+        </div>
+        <div class="step">
+          <div class="num">4</div>
+          <strong>Relatório</strong>
+          <p style="margin:6px 0 0;color:var(--muted);font-size:14px;">Entrega com recomendações e limitações explícitas.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="conformidade">
+      <h2>Conformidade e responsabilidade</h2>
+      <p class="sub">Compromisso com uso ético de fontes públicas, minimização de dados e transparência na apresentação de resultados.</p>
+      <div class="cards">
+        <div class="card">
+          <h4>RGPD e minimização</h4>
+          <p>Foco em dados públicos e minimização de recolha, com atenção a privacidade e contexto.</p>
+        </div>
+        <div class="card">
+          <h4>Uso ético e autorizado</h4>
+          <p>Execução apenas em domínios próprios ou com autorização explícita; sem intrusão.</p>
+        </div>
+        <div class="card">
+          <h4>Transparência</h4>
+          <p>Limitações assumidas e evidência rastreável para suportar conclusões.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contacto">
+      <h2>Contacto</h2>
+      <div class="contact">
+        <div class="note">
+          <strong style="color:var(--text)">Projeto académico.</strong><br/>
+          Para demonstração, a funcionalidade “Pedir Diagnóstico” é simulada e serve apenas para ilustrar o fluxo do protótipo e a prova de conceito.
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn primary" href="#servicos">Ver serviços</a>
+          <a class="btn" href="#como">Ver fluxo</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="foot">
+        <span>© OpenSight Intelligence — Projeto académico</span>
+        <span>OSINT ético • Sem intrusão • Fontes públicas</span>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>

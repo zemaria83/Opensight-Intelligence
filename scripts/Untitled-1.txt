@@ -1,0 +1,6 @@
+python scripts/subdomain_enum.py \
+  -i examples/subdomains_clean.txt \
+  -d google.com \
+  -o examples/subdomains_active.txt \
+  --unknown examples/subdomains_indefinidos.txt \
+  --delay 0.05
