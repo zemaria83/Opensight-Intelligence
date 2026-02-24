@@ -6,7 +6,9 @@ de forma ética e em conformidade com o Regulamento Geral sobre a Proteção de 
 
 O projeto inclui um protótipo funcional desenvolvido em Uizard e uma prova de conceito (PoC) técnica
 para demonstrar a viabilidade de automação de tarefas OSINT.
+# Contexto Académico
 
+- Este projeto foi desenvolvido no âmbito da unidade curricular Projeto I do CTeSP em Cibersegurança no ISTEC – Porto.
 ---
 
 ## Objetivos
