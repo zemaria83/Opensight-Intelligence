@@ -40,6 +40,7 @@ def make_resolver(timeout: float, nameservers: list[str] | None = None) -> dns.r
     r = dns.resolver.Resolver()
     r.timeout = timeout
     r.lifetime = timeout
+<<<<<<< HEAD
 
     # Fallback seguro para OSINT
     if nameservers:
@@ -47,6 +48,10 @@ def make_resolver(timeout: float, nameservers: list[str] | None = None) -> dns.r
     else:
         r.nameservers = ["1.1.1.1", "8.8.8.8"]
 
+=======
+    if nameservers:
+        r.nameservers = nameservers
+>>>>>>> 29acfed (landing)
     return r
 
 

@@ -1,1 +1,8 @@
-test
+www
+api
+mail
+login
+webmail
+media
+app
+help
